@@ -2,6 +2,10 @@
 pipeline {
     agent any
 
+    tools {
+        maven 'Maven3'
+    }
+
     environment {
         DOCKER_IMAGE = "incrdble/java-app:latest"
         KUBECTL = "C:\\Users\\incri\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin\\kubectl.exe"
@@ -83,5 +87,3 @@ pipeline {
         }
     }
 }
-
-
