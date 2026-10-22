@@ -1,32 +1,31 @@
-<CodeBlock language="groovy" editable>
 pipeline {
     agent any
 
-tools {
+    tools {
         maven 'Maven3'
     }
 
-stages {
-stage('Checkout') {
-steps {
-git branch: 'main',
-url: 'https://github.com/JEYSUDHARSAN/RepoforKuber.git'
-}
-}
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/JEYSUDHARSAN/RepoforKuber.git'
+            }
+        }
 
-stage('Build Java Application') {
+        stage('Build Java Application') {
             steps {
                 bat 'mvn clean package'
             }
         }
 
-stage('Build Docker Image') {
+        stage('Build Docker Image') {
             steps {
                 bat 'docker build -t incrdble/java-app:latest .'
             }
         }
 
-stage('Push Docker Image') {
+        stage('Push Docker Image') {
             steps {
                 withCredentials([usernamePassword(
                     credentialsId: 'dh-cred',
@@ -40,4 +39,3 @@ stage('Push Docker Image') {
         }
     }
 }
-</CodeBlock>
