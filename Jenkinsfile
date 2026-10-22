@@ -42,6 +42,7 @@ pipeline {
                     bat '''
                         echo %DOCKER_PASS%| docker login -u %DOCKER_USER% --password-stdin
                         if errorlevel 1 exit /b 1
+
                         docker push %DOCKER_IMAGE%
                         if errorlevel 1 exit /b 1
                     '''
@@ -52,9 +53,10 @@ pipeline {
         stage('Refresh Kubernetes Connection') {
             steps {
                 bat '''
-                    if not exist "C:\\Windows\\System32\\config\\systemprofile\\.kube" mkdir "C:\\Windows\\System32\\config\\systemprofile\\.kube"
-                    copy /Y "C:\\Users\\incri\\.kube\\config" "%KUBECONFIG_PATH%"
-                    if errorlevel 1 exit /b 1
+                    if not exist "%KUBECONFIG_PATH%" (
+                        echo Kubernetes configuration file not found.
+                        exit /b 1
+                    )
 
                     "%KUBECTL%" --kubeconfig="%KUBECONFIG_PATH%" get nodes
                     if errorlevel 1 exit /b 1
